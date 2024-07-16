@@ -1,14 +1,13 @@
-from fastapi import APIRouter, Body, Depends, HTTPException, status
+from fastapi import APIRouter
 
 router = APIRouter()
 
 
-@app.post("/uploadvideo")
-async def upload_video(file: UploadFile = File(...)):
-    if not file:
-        raise HTTPException(status_code=400, detail="No file uploaded")
+@router.get("/test1/", tags=["get test"])
+async def read_users():
+    return "helloworfff"
 
-    video_id = str(uuid.uuid4())
-    videos[video_id] = file.filename  # 여기서는 파일명을 저장, 실제로는 파일을 저장소에 저장 필요
-    return {"video_id": video_id}
+@router.post("/test2/", tags=["post test"])
+async def write_something(msg : str):
+    return {"HELLO" : "POST", "msg" : msg}
 
