@@ -8,6 +8,8 @@ app = FastAPI()
 
 app.include_router(upload.router)
 
+
+
 @app.get("/")
 async def home():
     return {"HELLO" : "GET"}
