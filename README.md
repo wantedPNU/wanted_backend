@@ -2,6 +2,7 @@
 - pipenv 사용
 - Python 3.10.9
 - FastAPI
+- MongoDB
 
 
 ## How to Start server
@@ -12,6 +13,7 @@
 4. $ pipenv shell
 5. $ pipenv run start 
 
+## 안되면 카톡
 
-## api teste방법
+## api test 방법
 1. localhost:5000/docs로 접속
