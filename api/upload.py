@@ -1,4 +1,4 @@
-from fastapi import FastAPI, File, UploadFile, APIRouter,Body
+from fastapi import File, UploadFile, APIRouter,Body
 from fastapi.responses import PlainTextResponse,JSONResponse
 from tempfile import NamedTemporaryFile
 from yolo_world.get_inference import process_video
@@ -59,7 +59,7 @@ def detect_faces(file: UploadFile = File(...)):
 
 @router.get("/test1/", tags=["get test"])
 async def read_users():
-    return "helloworfff"
+    return{"message" : "testing..."}
 
 
 @router.post("/test2/", tags=["post test"])

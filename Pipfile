@@ -8,6 +8,8 @@ fastapi = "*"
 uvicorn = "*"
 odmantic = "*"
 pymongo = "*"
+beanie = "*"
+pydantic_settings="*"
 
 [dev-packages]
 
