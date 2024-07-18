@@ -1,16 +1,23 @@
-from functools import lru_cache
+import json
+from pathlib import Path
+from typing import Optional
 
-from pydantic import BaseSettings
+# root 폴더로.
+BASE_DIR = Path(__file__).resolve().parent.parent
 
+def get_secret(
+    key: str,
+    default_value: Optional[str] = None,
+    json_path: str = str("secrets.json")
+):
+    with open(json_path) as f:
+        secrets = json.loads(f.read())
+    try:
+        return secrets[key]
+    except KeyError:
+        if default_value:
+            return default_value
+        raise EnvironmentError(f"Set the {key} environment variable")
 
-class Config(BaseSettings):
-    app_name: str = "MongoDB API"
-    db_path: str
-
-    class Config:
-        env_file = ".env"
-
-
-@lru_cache()
-def get_config():
-    return Config()
+MONGO_DB_NAME = get_secret("MONGO_DB_NAME")
+MONGO_DB_URL = get_secret("MONGO_DB_URL")

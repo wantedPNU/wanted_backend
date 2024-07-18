@@ -1,10 +1,27 @@
-from fastapi import FastAPI, File, UploadFile, APIRouter
+from fastapi import FastAPI, File, UploadFile, APIRouter,Body
 from fastapi.responses import PlainTextResponse,JSONResponse
 from tempfile import NamedTemporaryFile
 from yolo_world.get_inference import process_video
+from models.video import Video
 import os
-
+from database.database import *
+from scheme.video import Response
 router = APIRouter()
+
+@router.post(
+        "/video",
+        response_description="Video data added into the database",
+        response_model=Response,
+)
+async def add_video_data(video: Video = Body(...)):
+    new_video = await add_video(video)
+    return {
+        "status_code": 200,
+        "response_type": "success",
+        "description": "video entered successfully",
+        "data": new_video,
+    }
+
 
 
 @router.post("/video/test1", response_class=JSONResponse, tags=["upload test without db 1"])
