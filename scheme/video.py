@@ -1,11 +1,11 @@
-from typing import Optional,Any
+from typing import Optional
 from pydantic import BaseModel
 
 class Response(BaseModel):
     status_code: int
     response_type: str
     description: str
-    data: Optional[Any]
+    data: Optional[bytes]
 
     class Config:
         json_schema_extra = {
