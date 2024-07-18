@@ -1,5 +1,8 @@
+from typing import Optional
+
 from beanie import Document
-from fastapi import Form #동영상 처리 자료형
+from fastapi import Form,File #동영상 처리 
+
 
 class Video(Document):
     name : str
@@ -15,3 +18,18 @@ class Video(Document):
     class Settings:
         name = "video"
 
+class VideoFile(Document):
+    # name : str    
+    # content_type : str
+    file_data : Optional[bytes]
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                # "name" : "example video",
+                # "content_type" : "video/mp4",
+                "file_data" : "b'file binary data'"
+            }
+        }
+
+    
