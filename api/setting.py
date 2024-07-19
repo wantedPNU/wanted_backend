@@ -20,7 +20,7 @@ async def update_search_settings(settings: SearchSettings):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST\
                             , detail="Wrong Parameter")
     try:
-        # 설정 업데이트
+        # 설정 업데이트(db? 욜로울드에 바로?)
         return {"status": "search settings updated"}
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR\
