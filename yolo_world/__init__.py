@@ -17,15 +17,16 @@ translator = Translator()
 
 # 변환 함수
 def translate_to_korean(english_text):
-    translation = translator.translate(english_text, src='en', dest='ko')
+    translation = translator.translate(english_text, src='ko', dest='en')
     return translation.text
 
 classes = [translate_to_korean("노란색 바지를 입은 남자")]
+print(translate_to_korean("노란색 바지를 입은 남자"))
 model.set_classes(classes)
 
 # 비디오 경로 설정
 SOURCE_VIDEO_PATH = os.path.join(HOME, "blue_person.mp4")
-TARGET_VIDEO_PATH = os.path.join(HOME, "yellow_result2.mp4")
+TARGET_VIDEO_PATH = os.path.join(HOME, "yellow_result3.mp4")
 
 # 비디오 프레임 생성
 frame_generator = sv.get_video_frames_generator(SOURCE_VIDEO_PATH)
