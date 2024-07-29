@@ -1,36 +1,36 @@
-import os
-import cv2
-import supervision as sv
-from tqdm import tqdm
-from ultralytics import YOLO
-from googletrans import Translator
+# import os
+# import cv2
+# import supervision as sv
+# from tqdm import tqdm
+# from ultralytics import YOLO
+# from googletrans import Translator
 
-# 경로 설정
-HOME = os.getcwd()
-print(HOME)
+# # 경로 설정
+# HOME = os.getcwd()
+# print(HOME)
 
-# 모델 설정
-model = YOLO('yolov8x-worldv2.pt')
-translator = Translator()
+# # 모델 설정
+# model = YOLO('yolov8x-worldv2.pt')
+# translator = Translator()
 
 
-def translate_to_eng(english_text):
-    translation = translator.translate(english_text, src='ko', dest='en')
-    return translation.text
+# def translate_to_eng(english_text):
+#     translation = translator.translate(english_text, src='ko', dest='en')
+#     return translation.text
 
-classes = [translate_to_eng("파란 옷을 입은 사람"), translate_to_eng("흰 옷을 입은 사람")]
+# classes = [translate_to_eng("파란 옷을 입은 사람"), translate_to_eng("흰 옷을 입은 사람")]
 
-model.set_classes(classes)
-model.save("custom_yolov8xv2.pt")
+# model.set_classes(classes)
+# model.save("custom_yolov8xv2.pt")
 
-model = YOLO("custom_yolov8xv2.pt")
+# model = YOLO("custom_yolov8xv2.pt")
 
-results = model.predict("blue_person.mp4")
-for i in range(10, 200, 10):
-    results[i].save(os.path.join(HOME, "blue_result{i}.png"))
+# results = model.predict("blue_person.mp4")
+# for i in range(10, 200, 10):
+#     results[i].save(os.path.join(HOME, "blue_result{i}.png"))
 
-# Show results
-results[0].show()
+# # Show results
+# results[0].show()
 
 # # 번역기 객체 생성
 # 
