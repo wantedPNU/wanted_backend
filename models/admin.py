@@ -1,7 +1,8 @@
 from beanie import Document
 from fastapi.security import HTTPBasicCredentials
 from pydantic import BaseModel, EmailStr
-        
+
+
 class Admin(Document):
     fullname: str
     email: EmailStr
@@ -36,5 +37,28 @@ class AdminData(BaseModel):
             "example": {
                 "fullname": "Abdulazeez Abdulazeez Adeshina",
                 "email": "abdul@youngest.dev",
+            }
+        }
+
+
+class Query(Document):
+    text: str
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "text": "woman man",
+            }
+        }    
+
+
+class TextOutput(BaseModel):
+    words: list[str]
+    word_count: int
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "words": ["woman","man"],
+                "word_count" : 2,
             }
         }

@@ -2,8 +2,13 @@
 from beanie import PydanticObjectId
 
 from models.video import Video,VideoFile
+from models.admin import Query
 from fastapi import File,HTTPException
 
+
+async def add_query(new_query: Query) -> Query:
+    query = await new_query.create()
+    return query
 
 
 async def add_video(new_video: Video) -> Video:
