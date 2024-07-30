@@ -196,3 +196,11 @@ pyrightconfig.json
 
 .env.dev
 Pipfile.lock
+
+
+*.png
+*.mp4
+*.jpg
+yolo_world/*.pt
+yolo_world/output/
+yolo_world/input/

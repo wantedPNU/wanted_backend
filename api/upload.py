@@ -1,7 +1,7 @@
 from fastapi import File, UploadFile, APIRouter,Body,HTTPException
 from fastapi.responses import PlainTextResponse,JSONResponse
 from tempfile import NamedTemporaryFile
-from yolo_world.get_inference import process_video
+# from yolo_world.get_inference import process_video
 from models.video import Video,VideoFile
 import os
 from database.database import *
