@@ -14,23 +14,29 @@
 # translator = Translator()
 
 
-# def translate_to_eng(english_text):
-#     translation = translator.translate(english_text, src='ko', dest='en')
+# def translate_to_eng(korean_text):
+#     translation = translator.translate(korean_text, src='ko', dest='en')
 #     return translation.text
 
-# classes = [translate_to_eng("파란 옷을 입은 사람"), translate_to_eng("흰 옷을 입은 사람")]
+# classes = [translate_to_eng("파란 반팔을 입은 사람"), translate_to_eng("곱슬머리 사람")]
 
 # model.set_classes(classes)
-# model.save("custom_yolov8xv2.pt")
+# model.save("custom_yolov8s.pt")
 
-# model = YOLO("custom_yolov8xv2.pt")
+# model = YOLO("custom_yolov8s.pt")
 
-# results = model.predict("blue_person.mp4")
-# for i in range(10, 200, 10):
-#     results[i].save(os.path.join(HOME, "blue_result{i}.png"))
+# results = model.predict("../cctv1.png")
+# # for i in range(10, 200, 10):
+# #     results[i].save(os.path.join(HOME, f"blue_result{i}.png"))
 
 # # Show results
 # results[0].show()
+# results[0].save(os.path.join(HOME, f"cctv_res.png"))
+
+
+
+
+
 
 # # 번역기 객체 생성
 # 
