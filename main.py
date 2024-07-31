@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 # from fastapi.responses import JSONResponse
 # from pydantic import BaseModel
-from api import upload, setting
+from api import upload, setting,query
 from config.config import initiate_database
 # from controller.user_controller import UserController
 
@@ -11,6 +11,7 @@ app = FastAPI()
 
 app.include_router(upload.router)
 app.include_router(setting.router)
+app.include_router(query.router)
 
 ## 전체적인 구조 mvc 패턴으로 변경해야함
 

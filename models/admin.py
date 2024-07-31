@@ -1,7 +1,8 @@
 from beanie import Document
 from fastapi.security import HTTPBasicCredentials
 from pydantic import BaseModel, EmailStr
-        
+
+
 class Admin(Document):
     fullname: str
     email: EmailStr
@@ -38,3 +39,5 @@ class AdminData(BaseModel):
                 "email": "abdul@youngest.dev",
             }
         }
+
+

@@ -1,23 +1,16 @@
-from fastapi import File, UploadFile, APIRouter,Body,HTTPException
-from fastapi.responses import PlainTextResponse,JSONResponse
-from tempfile import NamedTemporaryFile
-# from yolo_world.get_inference import process_video
-from models.video import Video,VideoFile
-import os
+from fastapi import File, UploadFile, APIRouter,Body
+from models.video import Video
 from database.database import *
-from scheme.video import Response
-
 
 router = APIRouter()
 
 @router.post(
-        "/video",
-        response_description="Video data added into the database",
-        response_model=Response,
-        tags = ["upload test to db"],
+        "/video/meta",
+        response_description="Video data added into the database",        
+        tags = ["post video meta to db"],
 )
-async def add_video_data(video: Video = Body(...)):
-    new_video = await add_video(video)
+async def add_video_meta_to_db(video: Video = Body(...)):
+    new_video = await add_video_meta(video)
     return {
         "status_code": 200,
         "response_type": "success",
@@ -27,21 +20,15 @@ async def add_video_data(video: Video = Body(...)):
 
 
 @router.post(
-        "/video/test3",
+        "/video/file",
         response_description="Video data added into the database",        
-        tags = ["upload test to db"],
+        tags = ["post video file to db"],
 )
-async def detect_faces_V1(file: UploadFile = File(...)):
-    new_video_file = await add_video_file(file)        
-    print("hello3")
-    # return {
-    #     "status_code": 200,
-    #     "response_type": "success",
-    #     "description": "video file entered successfully",        
-    #     "data" : new_video_file
-    # }
+async def add_video_file_to_db(file: UploadFile = File(...)):
+    new_video_file = await add_video_file(file)            
     return {
-        "message": "succeeded"
+        "status_code": 200,
+        "response_type": "success",
+        "description": "video file entered successfully",                
     }    
-
 
