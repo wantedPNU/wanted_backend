@@ -2,7 +2,8 @@ from fastapi import FastAPI
 # from fastapi.responses import JSONResponse
 # from pydantic import BaseModel
 from api import upload, setting,query
-from config.config import initiate_database
+# from config.config import initiate_database
+from database.mongodb import initiate_database
 # from controller.user_controller import UserController
 
 from urllib.parse import quote

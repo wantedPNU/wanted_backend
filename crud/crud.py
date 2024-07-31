@@ -3,7 +3,7 @@ from beanie import PydanticObjectId
 
 from models.video import Video,VideoFile
 from models.query import Query
-
+from database.mongodb import *
 
 async def create_query(new_query: Query) -> Query:    
     query = await new_query.create()
