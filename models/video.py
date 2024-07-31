@@ -1,7 +1,5 @@
 from typing import Optional
-
 from beanie import Document
-from fastapi import Form,File #동영상 처리 
 
 
 class Video(Document):
