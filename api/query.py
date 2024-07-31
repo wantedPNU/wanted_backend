@@ -1,5 +1,5 @@
 from fastapi import APIRouter,Body
-from database.database import *
+from crud.crud import *
 from models.query import Query
 
 
@@ -9,13 +9,21 @@ router = APIRouter()
         "/query",        
         tags = ["post query to db"]
 )
-async def process_query(query: Query = Body(...)):      
-    new_query = await add_query(query)
+async def save_query(query: Query = Body(...)):      
+    new_query = await create_query(query)
     return {
         "status_code": 200,
         "response_type": "success",
         "description": "query entered successfully",
         "data": new_query,
     }
+
+
+# @router.get(
+#     "/query",
+#     taggs=["get query from db"]
+# )
+# async def find_query():
+#     query = await read_query()
 
 

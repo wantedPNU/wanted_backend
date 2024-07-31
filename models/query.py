@@ -11,8 +11,6 @@ class Query(Document):
         }    
 
 
-
-
 class TextOutput(BaseModel):
     words: list[str]
     word_count: int
