@@ -1,16 +1,17 @@
 
 from beanie import PydanticObjectId
-
+from bson import ObjectId
 from models.video import Video,VideoFile
 from models.query import Query
-from database.mongodb import *
+from database import db_manager
 
 async def create_query(new_query: Query) -> Query:    
     query = await new_query.create()
     return query
 
-# async def read_query()->Query:
-#     query = await 
+async def read_query(queryid: str)->Query:
+    query = await db_manager.db.Query.findOne({},{name :"woman with blue shirt, man with white shirt"}) 
+    return query
 
 async def create_video_meta(new_video: Video) -> Video:    
     video = await new_video.create()

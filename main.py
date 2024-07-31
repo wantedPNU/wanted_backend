@@ -3,7 +3,7 @@ from fastapi import FastAPI
 # from pydantic import BaseModel
 from api import upload, setting,query
 # from config.config import initiate_database
-from database.mongodb import initiate_database
+from database import db_manager
 # from controller.user_controller import UserController
 
 from urllib.parse import quote
@@ -23,4 +23,4 @@ async def home():
 
 @app.on_event("startup")
 async def on_app_start():
-	await initiate_database()
+	await db_manager.initiate_database()

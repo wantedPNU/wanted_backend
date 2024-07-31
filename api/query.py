@@ -11,6 +11,7 @@ router = APIRouter()
 )
 async def save_query(query: Query = Body(...)):      
     new_query = await create_query(query)
+    print(new_query.text)
     return {
         "status_code": 200,
         "response_type": "success",
@@ -19,11 +20,15 @@ async def save_query(query: Query = Body(...)):
     }
 
 
-# @router.get(
-#     "/query",
-#     taggs=["get query from db"]
-# )
-# async def find_query():
-#     query = await read_query()
+@router.get(
+    "/query",
+    tags=["get query from db"],
+)
+async def find_query(queryid: str) -> Query:
+    query = await read_query(queryid)
+    print(query.text)
+    return {
+        "queryText" : query.text
+    }
 
 
