@@ -10,7 +10,7 @@ async def create_query(new_query: Query) -> Query:
     return query
 
 async def read_query(queryid: str)->Query:
-    query = await db_manager.db.Query.findOne({},{name :"woman with blue shirt, man with white shirt"}) 
+    query = await db_manager.db.Query.find_one({"_id" :ObjectId(queryid)})    
     return query
 
 async def create_video_meta(new_video: Video) -> Video:    

@@ -24,11 +24,15 @@ async def save_query(query: Query = Body(...)):
     "/query",
     tags=["get query from db"],
 )
-async def find_query(queryid: str) -> Query:
+async def find_query(queryid: str) -> dict:
     query = await read_query(queryid)
-    print(query.text)
+    print(query['text'])
     return {
-        "queryText" : query.text
+        "status_code": 200,
+        "response_type": "success",
+        "description": "query entered successfully",
+        "type" : type(query).__name__,       
+        "query text" : query['text'],
     }
 
 
