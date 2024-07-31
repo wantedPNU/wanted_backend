@@ -1,6 +1,6 @@
 from fastapi import File, UploadFile, APIRouter,Body
 from models.video import Video
-from database.database import *
+from crud.crud import *
 
 router = APIRouter()
 
@@ -10,7 +10,7 @@ router = APIRouter()
         tags = ["post video meta to db"],
 )
 async def add_video_meta_to_db(video: Video = Body(...)):
-    new_video = await add_video_meta(video)
+    new_video = await create_video_meta(video)
     return {
         "status_code": 200,
         "response_type": "success",
@@ -25,7 +25,7 @@ async def add_video_meta_to_db(video: Video = Body(...)):
         tags = ["post video file to db"],
 )
 async def add_video_file_to_db(file: UploadFile = File(...)):
-    new_video_file = await add_video_file(file)            
+    new_video_file = await create_video_file(file)            
     return {
         "status_code": 200,
         "response_type": "success",

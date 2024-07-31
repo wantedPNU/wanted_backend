@@ -5,17 +5,19 @@ from models.video import Video,VideoFile
 from models.query import Query
 
 
-async def add_query(new_query: Query) -> Query:    
+async def create_query(new_query: Query) -> Query:    
     query = await new_query.create()
     return query
 
+# async def read_query()->Query:
+#     query = await 
 
-async def add_video_meta(new_video: Video) -> Video:    
+async def create_video_meta(new_video: Video) -> Video:    
     video = await new_video.create()
     return video
 
 
-async def add_video_file(file):
+async def create_video_file(file):
     # video_file = await new_video_file.create()
     # return video_file
     # try:
