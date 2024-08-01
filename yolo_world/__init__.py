@@ -34,7 +34,7 @@
 # results[0].save(os.path.join(HOME, f"cctv_res.png"))
 
 
-
+# 위 코드 서버 실행할때 너무 오래 걸려서 주석처리해놓음.
 
 
 
