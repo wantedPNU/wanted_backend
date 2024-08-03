@@ -13,6 +13,11 @@ async def read_query(queryid: str)->Query:
     query = await db_manager.db.Query.find_one({"_id" :ObjectId(queryid)})    
     return query
 
+async def read_video(videoid: str)->VideoFile:
+    video = await db_manager.db.VideoFile.find_one({"_id" : ObjectId(videoid)})
+    return video
+
+
 async def create_video_meta(new_video: Video) -> Video:    
     video = await new_video.create()
     return video
