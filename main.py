@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 # from fastapi.responses import JSONResponse
 # from pydantic import BaseModel
-from api import setting,query, video
+from api import setting,query, video,inference
 # from config.config import initiate_database
 from database import db_manager
 # from controller.user_controller import UserController
@@ -13,6 +13,7 @@ app = FastAPI()
 app.include_router(video.router)
 app.include_router(setting.router)
 app.include_router(query.router)
+app.include_router(inference.router)
 
 ## 전체적인 구조 mvc 패턴으로 변경해야함
 
