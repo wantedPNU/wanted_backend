@@ -27,8 +27,8 @@ print(classes)
 model.set_classes(classes)
 
 # 비디오 경로 설정
-# 이 비디오 경로를 outpue_video.mp4로 하면 될듯?? 
-SOURCE_VIDEO_PATH = os.path.join(HOME, "../blue_person.mp4")
+# 이 비디오 경로를 inpue_video.mp4로 하면 될듯?? 
+SOURCE_VIDEO_PATH = os.path.join(HOME, "../input_video.mp4")
 TARGET_VIDEO_PATH = os.path.join(HOME, "blue_result.mp4")
 
 # # 비디오 프레임 생성
