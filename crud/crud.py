@@ -27,7 +27,9 @@ async def create_video_file(file):
     # video_file = await new_video_file.create()
     # return video_file
     # try:
-    file_data = await file.read()
+    
+    file_data = await file.read()    
+    # file_data = file
     video_file = VideoFile(
         # filename=file.filename,
         # content_type=file.content_type,

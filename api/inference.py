@@ -34,7 +34,7 @@ async def get_inference_result_from_server():
     # os.system("python yolo_world/prevWorld.py")
 
     #추론 결과 이미지 이름을 "3_res.jpg" 대신에 넣으면됨. 
-    image_path = os.path.join(IMAGE_DIRECTORY, "3_res.jpg")
+    image_path = os.path.join(IMAGE_DIRECTORY, "1_res.jpg")
     print(image_path)
     if not os.path.exists(image_path):
         raise HTTPException(status_code=404, detail="Image not found")

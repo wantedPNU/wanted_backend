@@ -19,12 +19,24 @@ async def add_video_meta_to_db(video: Video = Body(...)):
     }
 
 
+# @router.post(
+#         "/video/file",
+#         response_description="Video data added into the database",        
+#         tags = ["post video file to db"],
+# )
+# async def add_video_file_to_db(file: UploadFile):    
+#     new_video_file = await create_video_file(file)            
+#     return {
+#         "status_code": 200,
+#         "response_type": "success",
+#         "description": "video file entered successfully",                
+#     }    
 @router.post(
         "/video/file",
         response_description="Video data added into the database",        
         tags = ["post video file to db"],
 )
-async def add_video_file_to_db(file: UploadFile = File(...)):
+async def add_video_file_to_db(file: UploadFile = File()):    
     new_video_file = await create_video_file(file)            
     return {
         "status_code": 200,
