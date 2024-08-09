@@ -5,6 +5,7 @@ from models.video import Video,VideoFile
 from models.query import Query
 from database import db_manager
 
+
 async def create_query(new_query: Query) -> Query:    
     query = await new_query.create()
     return query
