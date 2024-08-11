@@ -23,20 +23,20 @@ async def create_video_meta(new_video: Video) -> Video:
     video = await new_video.create()
     return video
 
-
-async def create_video_file(file):
-    # video_file = await new_video_file.create()
-    # return video_file
-    # try:
+#  현재 미상용(gridfs 사용중)
+# async def create_video_file(file):
+#     # video_file = await new_video_file.create()
+#     # return video_file
+#     # try:
     
-    file_data = await file.read()    
-    # file_data = file
-    video_file = VideoFile(
-        # filename=file.filename,
-        # content_type=file.content_type,
-        file_data=file_data
-    )
-    await video_file.insert()
-    return video_file
-    # except Exception as e:
-    #     raise HTTPException(status_code=500, detail=f"File upload failed: {str(e)}")
+#     file_data = await file.read()    
+#     # file_data = file
+#     video_file = VideoFile(
+#         # filename=file.filename,
+#         # content_type=file.content_type,
+#         file_data=file_data
+#     )
+#     await video_file.insert()
+#     return video_file
+#     # except Exception as e:
+#     #     raise HTTPException(status_code=500, detail=f"File upload failed: {str(e)}")

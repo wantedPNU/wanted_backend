@@ -1,5 +1,6 @@
 from fastapi import APIRouter, HTTPException, status
 from pydantic import BaseModel
+from yolo_world import prevWorld
 
 class SearchSettings(BaseModel):
     score_threshold: float
@@ -20,8 +21,8 @@ async def update_search_settings(settings: SearchSettings):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST\
                             , detail="Wrong Parameter")
     try:
-        # 설정 업데이트(db? 욜로울드에 바로?)
-        return {"status": "search settings updated"}
+        prevWorld.set_inference(settings.score_threshold, settings.frame_interval)
+        return {"status": f"search settings updated {settings.score_threshold}, {settings.frame_interval}"}
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR\
                             , detail="Internal Server Error")

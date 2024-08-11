@@ -1,7 +1,8 @@
 from fastapi import APIRouter,Body
 from crud.crud import *
 from models.query import Query
-
+from yolo_world import prevWorld
+from api import inference_setting
 
 router = APIRouter()
 @router.post(
@@ -12,9 +13,7 @@ async def save_query(queryString:str= Body(...)):
     print(queryString)
     query = Query(text=queryString)
     query.text = queryString
-    new_query = await create_query(query)    
-    print(new_query.text)
-
+    inference_setting.update_query(query.text[10:-2].split(','))
     return {
         "status_code": 200,
         "response_type": "success",

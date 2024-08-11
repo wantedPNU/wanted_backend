@@ -10,6 +10,7 @@ odmantic = "*"
 pymongo = "*"
 beanie = "*"
 pydantic_settings="*"
+translators = "*"
 
 [dev-packages]
 

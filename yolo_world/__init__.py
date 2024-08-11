@@ -1,3 +1,8 @@
+# from yolo_world.prevWorld import InferenceSettings
+
+
+# inference_setting = InferenceSettings()
+
 # import os
 # import cv2
 # import supervision as sv

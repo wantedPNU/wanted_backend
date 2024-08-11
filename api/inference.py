@@ -6,92 +6,66 @@ from fastapi.responses import FileResponse
 from starlette.responses import StreamingResponse
 import gridfs
 from pymongo import MongoClient
+from api import inference_setting
+from yolo_world import prevWorld
+from io import BytesIO
+import zipfile
 
 router = APIRouter()
 
 IMAGE_DIRECTORY = "./frames/"
-# @router.get(
-#     "/inference",
-#     response_description="get inference data from server",
-#     tags = ["get inference data from server"],
-# )
-# async def get_inference_result_from_server():  
-#     #추론하고 싶은 비디오의 db상의 id
-#     videoid = "66add2b4a5a86d238117a3fb"
-#     video = await read_video(videoid)  
-#     #넣고 싶은 쿼리의 db상의 id
-#     queryid = "66a9e5b7a8fdec6af6edd5e3"      
-#     query = await read_query(queryid)
-
-#     video_bytes = video['file_data']    
-#     input_file_path = 'input_video.mp4'
-    
-#     with open(input_file_path, 'wb') as video_file:
-#         video_file.write(video_bytes)
-
-#     print(f"비디오 파일이 {input_file_path}에 저장되었습니다. 저장한 비디오 파일을 기반으로 추론을 시작합니다.")
-    
-
-#     print("starting yoloworld...")
-#     # yoloworld 모델 시작
-#     # os.system("python yolo_world/prevWorld.py")
-
-#     #추론 결과 이미지 이름을 "3_res.jpg" 대신에 넣으면됨. 
-#     image_path = os.path.join(IMAGE_DIRECTORY, "1_res.jpg")
-#     print(image_path)
-#     if not os.path.exists(image_path):
-#         raise HTTPException(status_code=404, detail="Image not found")
-    
-
-#     return StreamingResponse(open(image_path, mode="rb"), media_type='image/jpeg')
-    
-#     # 이거는 왜 안되는지 조사
-#     # test = FileResponse(image_path,media_type='image/jpeg')  
-#     # print(test.media_type)
-#     # print(test.body)
-
-#     # return {
-#     #     test
-#     # }
 @router.get(
     "/inference",
     response_description="get inference data from server",
     tags = ["get inference data from server"],
 )
-async def get_inference_result_from_server():  
-    
-        #넣고 싶은 쿼리의 db상의 id
-    queryid = "66a9e5b7a8fdec6af6edd5e3"      
-    query = await read_query(queryid)
-
+async def get_inference_result_from_server(scoreThreshold: float , frameInterval : int):
+    os.system("rm -rf ./frames")
+    os.system("rm -rf ./input_video.mp4")
+    print(scoreThreshold)
+    print(frameInterval)
+    inference_setting.update_settings(scoreThreshold, frameInterval)
     client = MongoClient('mongodb://localhost:27017/')
-    # 데이터베이스 선택
     db = client['wanted']
-    # GridFS 인스턴스 생성
     fs = gridfs.GridFS(db)
-    # 파일 ID로 파일을 찾고 다운로드
-    file_id = ObjectId('66b5c939c474ef279ce71fc9')
-    output_path = 'abcd.mp4'
+    file_id = ObjectId(inference_setting.file_id)
+    output_path = 'input_video.mp4'
 
     with open(output_path, 'wb') as f:
         f.write(fs.get(file_id).read())
 
     print(f"비디오 파일이 {output_path}에 저장되었습니다. 저장한 비디오 파일을 기반으로 추론을 시작합니다.")
     
-
     print("starting yoloworld...")
     # yoloworld 모델 시작
     # os.system("python yolo_world/prevWorld.py")
+    prevWorld.run_inference(inference_setting)
 
     #추론 결과 이미지 이름을 "3_res.jpg" 대신에 넣으면됨. 
-    image_path = os.path.join(IMAGE_DIRECTORY, "1_res.jpg")
-    print(image_path)
-    if not os.path.exists(image_path):
-        raise HTTPException(status_code=404, detail="Image not found")
+    # image_path = os.path.join(IMAGE_DIRECTORY, "1_res.jpg")
+    # print(image_path)
+    # if not os.path.exists(image_path):
+    #     raise HTTPException(status_code=404, detail="Image not found")
+    # return StreamingResponse(open(image_path, mode="rb"), media_type='image/jpeg')
     
+    frames_directory = os.path.join("./", "frames")
+    if not os.path.exists(frames_directory):
+        raise HTTPException(status_code=404, detail="Frames directory not found")
 
-    return StreamingResponse(open(image_path, mode="rb"), media_type='image/jpeg')
-    
+    image_filenames = [f for f in os.listdir(frames_directory) if f.endswith(('_res.jpg'))]
+    if not image_filenames:
+        raise HTTPException(status_code=404, detail="No images found in frames directory")
+
+    def iter_file():
+        with BytesIO() as zip_buffer:
+            with zipfile.ZipFile(zip_buffer, "w") as zip_file:
+                for image_filename in image_filenames:
+                    image_path = os.path.join(frames_directory, image_filename)
+                    zip_file.write(image_path, image_filename)
+            zip_buffer.seek(0)
+            yield from zip_buffer  # Yield the content in chunks
+
+    return StreamingResponse(iter_file(), media_type="application/zip")
     # 이거는 왜 안되는지 조사
     # test = FileResponse(image_path,media_type='image/jpeg')  
     # print(test.media_type)
