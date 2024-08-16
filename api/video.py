@@ -33,7 +33,14 @@ async def add_video_file_to_db(file: UploadFile = File()):
     contents = await file.read()
     file_id = fs.put(contents, filename=file.filename)
     inference_setting.update_file_id(file_id)
-    print(file_id)
+    print(file_id)            
+    file_id = ObjectId(inference_setting.file_id)
+    output_path = './샘플영상/input_video.mp4'
+
+    with open(output_path, 'wb') as f:
+        f.write(fs.get(file_id).read())
+
+    print(f"비디오 파일이 {output_path}에 저장되었습니다.")
     return {
         "status_code": 200,
         "response_type": "success",

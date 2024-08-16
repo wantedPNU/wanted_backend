@@ -51,6 +51,8 @@ def extract_frames(video_path, frame_interval):
     os.makedirs(output_dir, exist_ok=True)
 
     while cap.isOpened():
+        # print(frame_rate)
+        # print(frame_count)
         ret, frame = cap.read()
         if not ret:
             break
@@ -104,6 +106,7 @@ def run_inference_on_video(video_path, model, inference_setting: InferenceSettin
     output_dir = os.path.join(os.getcwd(), "frames")
     for i in range(count):
         process_and_annotate_image(i, os.path.join(output_dir, f"{i}.jpg"), model, inference_setting.classes, BOUNDING_BOX_ANNOTATOR, LABEL_ANNOTATOR, output_dir, inference_setting)
+        print(i)
 
 def set_inference(score_threshold: float, frame_interval: int, inference_setting: InferenceSettings):
     """추론 설정 업데이트"""
@@ -118,9 +121,19 @@ def run_inference(inference_settings: InferenceSettings):
 
     inference_setting.update_settings(score_threshold = inference_settings.score_threshold, frame_interval = inference_settings.frame_interval)
     inference_setting.update_query(inference_settings.classes)
-
+    files_and_dirs = os.listdir("./샘플영상/")
+    file_count = len([f for f in files_and_dirs if os.path.isfile(os.path.join("./샘플영상/", f))])
+    print(file_count)
+    file_names = [f for f in files_and_dirs if os.path.isfile(os.path.join("./샘플영상/", f))]
+    print(file_names)
+    for file_name in file_names:
+        # 비디오에 대해 추론 실행
+        run_inference_on_video(os.path.join(os.getcwd(), f"./샘플영상/{file_name}"), model, inference_setting)
+    
     # 비디오에 대해 추론 실행
-    run_inference_on_video(os.path.join(os.getcwd(), "./input_video.mp4"), model, inference_setting)
+        # run_inference_on_video(os.path.join(os.getcwd(), "./input_video.mp4"), model, inference_setting)
+
+
 
 '''
 # 경로 설정
