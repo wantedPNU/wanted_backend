@@ -37,16 +37,9 @@ async def get_inference_result_from_server(scoreThreshold: float , frameInterval
     print(f"비디오 파일이 {output_path}에 저장되었습니다. 저장한 비디오 파일을 기반으로 추론을 시작합니다.")
     
     print("starting yoloworld...")
-    # yoloworld 모델 시작
-    # os.system("python yolo_world/prevWorld.py")
+    
+    # yoloworld 모델 시작    
     prevWorld.run_inference(inference_setting)
-
-    #추론 결과 이미지 이름을 "3_res.jpg" 대신에 넣으면됨. 
-    # image_path = os.path.join(IMAGE_DIRECTORY, "1_res.jpg")
-    # print(image_path)
-    # if not os.path.exists(image_path):
-    #     raise HTTPException(status_code=404, detail="Image not found")
-    # return StreamingResponse(open(image_path, mode="rb"), media_type='image/jpeg')
     
     frames_directory = os.path.join("./", "frames")
     if not os.path.exists(frames_directory):
