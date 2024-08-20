@@ -40,9 +40,9 @@ async def add_video_file_to_db(location: str = Form(...), file: UploadFile = Fil
     file_id = ObjectId(inference_setting.file_id)
     
     #todo : reject input if it is same video
-    output_path = f'./샘플영상/{file_id}.mp4'
-    files_and_dirs = os.listdir("./샘플영상/")
-    file_names = [f for f in files_and_dirs if os.path.isfile(os.path.join("./샘플영상/", f))]
+    output_path = f'./samples/{file_id}.mp4'
+    files_and_dirs = os.listdir("./samples/")
+    file_names = [f for f in files_and_dirs if os.path.isfile(os.path.join("./samples/", f))]
     
     with open(output_path, 'wb') as f:
         f.write(fs.get(file_id).read())

@@ -19,8 +19,12 @@ class InferenceSettings:
     def update_file_id(self, file_id: str):
         self.file_id = file_id
 
-    def update_query(self, queries):
-        translated_queries = [ts.translate_text(query) for query in queries]
+    def update_query(self, queries, flag):
+        if flag:
+            translated_queries = [f"person wearing {ts.translate_text(query)}" for query in queries]
+        else:
+            translated_queries = [f"{ts.translate_text(query)}" for query in queries]
+            
         self.classes = translated_queries
         print(f"추가된 쿼리: {self.classes}")
 
@@ -36,7 +40,7 @@ def initialize_model(inference_settings, model_id="yolo_world/x"):
     model.set_classes(inference_settings.classes)
     return model
 
-def extract_frames(video_path, frame_interval):
+def extract_frames(video_path, frame_interval, file_name):
     """비디오에서 프레임을 간격마다 추출하여 저장"""
     cap = cv2.VideoCapture(video_path)
     frame_rate = int(cap.get(cv2.CAP_PROP_FPS))
@@ -59,7 +63,7 @@ def extract_frames(video_path, frame_interval):
 
         if frame_count % interval == 0:
             fgmask = fgbg.apply(frame)
-            cv2.imwrite(os.path.join(output_dir, f"{count}.jpg"), frame)
+            cv2.imwrite(os.path.join(output_dir,  f"{file_name[0:-4]}의 {count}번째 프레임.jpg"), frame)
             count += 1
 
         frame_count += 1
@@ -69,7 +73,7 @@ def extract_frames(video_path, frame_interval):
 
     return count
 
-def process_and_annotate_image(cnt, source_image_path, model, classes, bounding_box_annotator, label_annotator, output_dir, inference_setting: InferenceSettings):
+def process_and_annotate_image(cnt, source_image_path, model, classes, bounding_box_annotator, label_annotator, output_dir, inference_setting: InferenceSettings, file_name):
     """이미지에 대해 추론을 수행하고 주석을 추가"""
     if not os.path.exists(source_image_path):
         raise FileNotFoundError(f"Image file not found: {source_image_path}")
@@ -81,23 +85,24 @@ def process_and_annotate_image(cnt, source_image_path, model, classes, bounding_
     results = model.infer(image, confidence=inference_setting.score_threshold)
     detections = sv.Detections.from_inference(results)
 
-    labels = [
-        f"{classes[class_id]} {confidence:0.3f}"
-        for class_id, confidence in zip(detections.class_id, detections.confidence)
-    ]
+    if len(detections) > 0:
+        labels = [
+            f"{classes[class_id]} {confidence:0.3f}"
+            for class_id, confidence in zip(detections.class_id, detections.confidence)
+        ]
 
-    annotated_image = image.copy()
-    annotated_image = bounding_box_annotator.annotate(annotated_image, detections)
-    annotated_image = label_annotator.annotate(annotated_image, detections, labels=labels)
-    print(classes)
-    print(inference_setting.score_threshold)
-    print(inference_setting.frame_interval)
-    cv2.imwrite(os.path.join(output_dir, f"{cnt}_res.jpg"), annotated_image)
+        annotated_image = image.copy()
+        annotated_image = bounding_box_annotator.annotate(annotated_image, detections)
+        annotated_image = label_annotator.annotate(annotated_image, detections, labels=labels)
+        print(classes)
+        print(inference_setting.score_threshold)
+        print(inference_setting.frame_interval)
+        cv2.imwrite(os.path.join(output_dir, f"{file_name[0:-4]}의 {cnt}번째 프레임 결과.jpg"), annotated_image)
 
-def run_inference_on_video(video_path, model, inference_setting: InferenceSettings):
+def run_inference_on_video(video_path, model, inference_setting: InferenceSettings, file_name):
     """비디오에 대해 추론을 실행"""
     # 추출된 프레임 수
-    count = extract_frames(video_path, inference_setting.frame_interval)
+    count = extract_frames(video_path, inference_setting.frame_interval, file_name)
 
     # 주석 추가 도구 설정
     BOUNDING_BOX_ANNOTATOR = sv.BoundingBoxAnnotator(thickness=1)
@@ -105,7 +110,7 @@ def run_inference_on_video(video_path, model, inference_setting: InferenceSettin
 
     output_dir = os.path.join(os.getcwd(), "frames")
     for i in range(count):
-        process_and_annotate_image(i, os.path.join(output_dir, f"{i}.jpg"), model, inference_setting.classes, BOUNDING_BOX_ANNOTATOR, LABEL_ANNOTATOR, output_dir, inference_setting)
+        process_and_annotate_image(i, os.path.join(output_dir, f"{file_name[0:-4]}의 {i}번째 프레임.jpg"), model, inference_setting.classes, BOUNDING_BOX_ANNOTATOR, LABEL_ANNOTATOR, output_dir, inference_setting, file_name)
         print(i)
 
 def set_inference(score_threshold: float, frame_interval: int, inference_setting: InferenceSettings):
@@ -120,15 +125,15 @@ def run_inference(inference_settings: InferenceSettings):
     model = initialize_model(inference_settings)
 
     inference_setting.update_settings(score_threshold = inference_settings.score_threshold, frame_interval = inference_settings.frame_interval)
-    inference_setting.update_query(inference_settings.classes)
-    files_and_dirs = os.listdir("./샘플영상/")
-    file_count = len([f for f in files_and_dirs if os.path.isfile(os.path.join("./샘플영상/", f))])
+    inference_setting.update_query(inference_settings.classes, True)
+    files_and_dirs = os.listdir("./samples/")
+    file_count = len([f for f in files_and_dirs if os.path.isfile(os.path.join("./samples/", f))])
     print(file_count)
-    file_names = [f for f in files_and_dirs if os.path.isfile(os.path.join("./샘플영상/", f))]
+    file_names = [f for f in files_and_dirs if os.path.isfile(os.path.join("./samples/", f))]
     print(file_names)
     for file_name in file_names:
         # 비디오에 대해 추론 실행
-        run_inference_on_video(os.path.join(os.getcwd(), f"./샘플영상/{file_name}"), model, inference_setting)
+        run_inference_on_video(os.path.join(os.getcwd(), f"./samples/{file_name}"), model, inference_setting, file_name)
     
     # 비디오에 대해 추론 실행
         # run_inference_on_video(os.path.join(os.getcwd(), "./input_video.mp4"), model, inference_setting)

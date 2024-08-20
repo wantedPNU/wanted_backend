@@ -35,7 +35,7 @@ async def get_inference_result_from_server(scoreThreshold: float , frameInterval
     if not os.path.exists(frames_directory):
         raise HTTPException(status_code=404, detail="Frames directory not found")
 
-    image_filenames = [f for f in os.listdir(frames_directory) if f.endswith(('_res.jpg'))]
+    image_filenames = [f for f in os.listdir(frames_directory) if f.endswith(('결과.jpg'))]
     if not image_filenames:
         raise HTTPException(status_code=404, detail="No images found in frames directory")
 

@@ -13,7 +13,7 @@ async def save_query(queryString:str= Body(...)):
     print(queryString)
     query = Query(text=queryString)
     query.text = queryString
-    inference_setting.update_query(query.text[10:-2].split(','))
+    inference_setting.update_query(query.text[10:-2].split(','), False)
     return {
         "status_code": 200,
         "response_type": "success",
