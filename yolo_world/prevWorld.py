@@ -4,7 +4,10 @@ import supervision as sv
 from tqdm import tqdm
 from inference.models.yolo_world.yolo_world import YOLOWorld
 import translators as ts
+import asyncio
 
+
+current_frame_count = 0
 class InferenceSettings:
     def __init__(self, score_threshold: float = 0.1, frame_interval: int = 3):
         self.score_threshold = score_threshold
@@ -33,7 +36,7 @@ class InferenceSettings:
             "score_threshold": self.score_threshold,
             "frame_interval": self.frame_interval
         }
-    
+
 def initialize_model(inference_settings, model_id="yolo_world/x"):
     """모델을 초기화하고, 추론 설정의 클래스와 연결"""
     model = YOLOWorld(model_id=model_id)
@@ -99,11 +102,11 @@ def process_and_annotate_image(cnt, source_image_path, model, classes, bounding_
         print(inference_setting.frame_interval)
         cv2.imwrite(os.path.join(output_dir, f"{file_name[0:-4]}의 {cnt}번째 프레임 결과.jpg"), annotated_image)
 
-def run_inference_on_video(video_path, model, inference_setting: InferenceSettings, file_name):
+def run_inference_on_video(video_path, model, inference_setting: InferenceSettings, file_name,file_count):
     """비디오에 대해 추론을 실행"""
     # 추출된 프레임 수
     count = extract_frames(video_path, inference_setting.frame_interval, file_name)
-
+    
     # 주석 추가 도구 설정
     BOUNDING_BOX_ANNOTATOR = sv.BoundingBoxAnnotator(thickness=1)
     LABEL_ANNOTATOR = sv.LabelAnnotator(text_thickness=2, text_scale=0.5, text_color=sv.Color.BLACK)
@@ -111,6 +114,7 @@ def run_inference_on_video(video_path, model, inference_setting: InferenceSettin
     output_dir = os.path.join(os.getcwd(), "frames")
     for i in range(count):
         process_and_annotate_image(i, os.path.join(output_dir, f"{file_name[0:-4]}의 {i}번째 프레임.jpg"), model, inference_setting.classes, BOUNDING_BOX_ANNOTATOR, LABEL_ANNOTATOR, output_dir, inference_setting, file_name)
+        current_frame_count += 1
         print(i)
 
 def set_inference(score_threshold: float, frame_interval: int, inference_setting: InferenceSettings):
@@ -131,13 +135,57 @@ def run_inference(inference_settings: InferenceSettings):
     print(file_count)
     file_names = [f for f in files_and_dirs if os.path.isfile(os.path.join("./samples/", f))]
     print(file_names)
+    
     for file_name in file_names:
         # 비디오에 대해 추론 실행
-        run_inference_on_video(os.path.join(os.getcwd(), f"./samples/{file_name}"), model, inference_setting, file_name)
+        run_inference_on_video(os.path.join(os.getcwd(), f"./samples/{file_name}"), model, inference_setting, file_name,file_count)
     
     # 비디오에 대해 추론 실행
         # run_inference_on_video(os.path.join(os.getcwd(), "./input_video.mp4"), model, inference_setting)
 
+def get_frame_count_of_file(video_path, inference_setting: InferenceSettings, file_name):
+    
+    # 추출된 프레임 수
+    count = extract_frames(video_path, inference_setting.frame_interval, file_name)
+    
+    return count
+
+def get_total_frame_count(inference_settings:InferenceSettings):
+    inference_setting = InferenceSettings()
+
+    model = initialize_model(inference_settings)
+
+    inference_setting.update_settings(score_threshold = inference_settings.score_threshold, frame_interval = inference_settings.frame_interval)
+    inference_setting.update_query(inference_settings.classes, True)
+    files_and_dirs = os.listdir("./samples/")
+    file_count = len([f for f in files_and_dirs if os.path.isfile(os.path.join("./samples/", f))])
+    print(file_count)
+    file_names = [f for f in files_and_dirs if os.path.isfile(os.path.join("./samples/", f))]
+    print(file_names)
+    total_frame_count = 0
+    for file_name in file_names:
+        # 비디오에 대해 추론 실행
+        total_frame_count += get_frame_count_of_file(os.path.join(os.getcwd(), f"./samples/{file_name}"), inference_setting, file_name) 
+    
+    return total_frame_count
+        
+
+
+
+async def progress_done():    
+    temp = await get_progress_value()
+    print(temp)    
+    if(True): #temp == 1로 바꿔야함
+        return True    
+    return False    
+    
+def get_progress_value():
+        
+    # progress_value = current_frame_count/total_frame_count #비동기적으로 계속줘야함.
+    
+    # return progress_value
+    total_frame_count = get_total_frame_count()
+    return 0.5
 
 
 '''

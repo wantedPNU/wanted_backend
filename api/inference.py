@@ -11,18 +11,19 @@ from yolo_world import prevWorld
 from io import BytesIO
 import zipfile
 import asyncio
-
+from yolo_world.prevWorld import progress_done,get_progress_value
 router = APIRouter()
 
 IMAGE_DIRECTORY = "./frames/"
 
 
 async def generate_numbers():
-    num = 0
+    num = get_progress_value()
+    print(num)
     while True:
         yield f"data: {num}\n\n"
-        num += 1
-        if(num == 100):
+        
+        if(progress_done()): ## progress_done으로 바꿔야함.
             break
         await asyncio.sleep(1)  # 1초마다 숫자를 전송
 
@@ -47,6 +48,7 @@ async def get_inference_result_from_server(scoreThreshold: float , frameInterval
     
     print("starting yoloworld...")
     
+    prevWorld.get_frame_count_of_file(inference_setting)
     # yoloworld 모델 시작    
     prevWorld.run_inference(inference_setting)
     
