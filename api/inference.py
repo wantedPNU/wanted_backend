@@ -1,4 +1,4 @@
-from fastapi import APIRouter,Body,HTTPException
+from fastapi import APIRouter,Body,HTTPException,Request
 from models.video import Video
 from crud.crud import *
 import os
@@ -10,10 +10,29 @@ from api import inference_setting
 from yolo_world import prevWorld
 from io import BytesIO
 import zipfile
+import asyncio
 
 router = APIRouter()
 
 IMAGE_DIRECTORY = "./frames/"
+
+
+async def generate_numbers():
+    num = 0
+    while True:
+        yield f"data: {num}\n\n"
+        num += 1
+        if(num == 100):
+            break
+        await asyncio.sleep(1)  # 1초마다 숫자를 전송
+
+@router.get(
+    "/inference/progress"
+)
+async def sse_test():
+    print("start")
+    return StreamingResponse(generate_numbers(), media_type="text/event-stream")
+
 @router.get(
     "/inference",
     response_description="get inference data from server",
