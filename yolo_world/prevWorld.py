@@ -114,7 +114,7 @@ def run_inference_on_video(video_path, model, inference_setting: InferenceSettin
     output_dir = os.path.join(os.getcwd(), "frames")
     for i in range(count):
         process_and_annotate_image(i, os.path.join(output_dir, f"{file_name[0:-4]}의 {i}번째 프레임.jpg"), model, inference_setting.classes, BOUNDING_BOX_ANNOTATOR, LABEL_ANNOTATOR, output_dir, inference_setting, file_name)
-        current_frame_count += 1
+        # current_frame_count += 1
         print(i)
 
 def set_inference(score_threshold: float, frame_interval: int, inference_setting: InferenceSettings):
@@ -122,6 +122,46 @@ def set_inference(score_threshold: float, frame_interval: int, inference_setting
     inference_setting.update_settings(score_threshold, frame_interval)
     print(f"Updated score_threshold: {inference_setting.score_threshold}")
     print(f"Updated frame_interval: {inference_setting.frame_interval}")
+
+son = 0
+async def get_son():
+    return son
+
+async def temp_Func():
+    print("in temp_func")
+    while True:                
+        print("incresing son")
+        global son
+        print(son)        
+        son += 1
+        if son == 10:
+            break;        
+        await asyncio.sleep(1) 
+
+async def fake_run_inference(inference_settings: InferenceSettings):
+    
+    #전역 변수로 다루기는 안된다는 결론
+    # temp_Func()
+
+    inference_setting = InferenceSettings()
+
+    model = initialize_model(inference_settings)
+
+    inference_setting.update_settings(score_threshold = inference_settings.score_threshold, frame_interval = inference_settings.frame_interval)
+    inference_setting.update_query(inference_settings.classes, True)
+    files_and_dirs = os.listdir("./samples/")
+    file_count = len([f for f in files_and_dirs if os.path.isfile(os.path.join("./samples/", f))])
+    print(file_count)
+    file_names = [f for f in files_and_dirs if os.path.isfile(os.path.join("./samples/", f))]
+    print(file_names)            
+    
+    global son 
+    # mom = get_total_frame_count(inference_setting) 현재 frame 폴더, 3초 프레임 기준으로 587 결과, 일단 하드 코딩 했음. 
+    
+    mom = 587
+    await temp_Func()
+    
+    
 
 def run_inference(inference_settings: InferenceSettings):
     inference_setting = InferenceSettings()
@@ -135,9 +175,11 @@ def run_inference(inference_settings: InferenceSettings):
     print(file_count)
     file_names = [f for f in files_and_dirs if os.path.isfile(os.path.join("./samples/", f))]
     print(file_names)
+            
     
     for file_name in file_names:
         # 비디오에 대해 추론 실행
+        
         run_inference_on_video(os.path.join(os.getcwd(), f"./samples/{file_name}"), model, inference_setting, file_name,file_count)
     
     # 비디오에 대해 추론 실행
@@ -165,6 +207,7 @@ def get_total_frame_count(inference_settings:InferenceSettings):
     total_frame_count = 0
     for file_name in file_names:
         # 비디오에 대해 추론 실행
+        print("getting_total_Frame_count...")
         total_frame_count += get_frame_count_of_file(os.path.join(os.getcwd(), f"./samples/{file_name}"), inference_setting, file_name) 
     
     return total_frame_count

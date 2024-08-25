@@ -11,27 +11,33 @@ from yolo_world import prevWorld
 from io import BytesIO
 import zipfile
 import asyncio
-from yolo_world.prevWorld import progress_done,get_progress_value
+from yolo_world.prevWorld import progress_done,get_progress_value,get_son
 router = APIRouter()
 
 IMAGE_DIRECTORY = "./frames/"
 
 
 async def generate_numbers():
-    num = get_progress_value()
+    # num = get_progress_value()
+    num = 0    
     print(num)
+    
     while True:
-        yield f"data: {num}\n\n"
-        
-        if(progress_done()): ## progress_done으로 바꿔야함.
-            break
+        son = get_son()
+        print(son)
+        yield f"data: {son}\n\n"        
+        # if(progress_done()): ## progress_done으로 바꿔야함.
+        num += 1
+        if num == 10:
+            break;        
         await asyncio.sleep(1)  # 1초마다 숫자를 전송
 
 @router.get(
     "/inference/progress"
 )
 async def sse_test():
-    print("start")
+    print("start sse")
+    # inference_setting.update_settings(0.5, frameInterval)
     return StreamingResponse(generate_numbers(), media_type="text/event-stream")
 
 @router.get(
@@ -41,16 +47,17 @@ async def sse_test():
 )
 async def get_inference_result_from_server(scoreThreshold: float , frameInterval : int):
     os.system("rm -rf ./frames")
-    os.system("rm -rf ./input_video.mp4")
+    
     print(scoreThreshold)
     print(frameInterval)
     inference_setting.update_settings(scoreThreshold, frameInterval)
     
     print("starting yoloworld...")
     
-    prevWorld.get_frame_count_of_file(inference_setting)
+    await prevWorld.fake_run_inference(inference_setting)
+    # prevWorld.get_frame_count_of_file(inference_setting)
     # yoloworld 모델 시작    
-    prevWorld.run_inference(inference_setting)
+    # prevWorld.run_inference(inference_setting)
     
     frames_directory = os.path.join("./", "frames")
     if not os.path.exists(frames_directory):
