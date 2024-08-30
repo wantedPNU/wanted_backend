@@ -5,6 +5,7 @@ from tqdm import tqdm
 from inference.models.yolo_world.yolo_world import YOLOWorld
 import translators as ts
 
+
 class InferenceSettings:
     def __init__(self, score_threshold: float = 0.1, frame_interval: int = 3):
         self.score_threshold = score_threshold
@@ -21,7 +22,7 @@ class InferenceSettings:
 
     def update_query(self, queries, flag):
         if flag:
-            translated_queries = [f"person wearing {ts.translate_text(query)}" for query in queries]
+            translated_queries = [f"{ts.translate_text(query)} person" for query in queries]
         else:
             translated_queries = [f"{ts.translate_text(query)}" for query in queries]
             
@@ -37,6 +38,7 @@ class InferenceSettings:
 def initialize_model(inference_settings, model_id="yolo_world/x"):
     """모델을 초기화하고, 추론 설정의 클래스와 연결"""
     model = YOLOWorld(model_id=model_id)
+    # model = YOLO('yolov8x-worldv2.pt')
     model.set_classes(inference_settings.classes)
     return model
 

@@ -7,7 +7,7 @@ from starlette.responses import StreamingResponse
 import gridfs
 from pymongo import MongoClient
 from api import inference_setting
-from yolo_world import prevWorld
+from yolo_world import prevWorld,curWorld
 from io import BytesIO
 import zipfile
 
@@ -21,7 +21,8 @@ IMAGE_DIRECTORY = "./frames/"
 )
 async def get_inference_result_from_server(scoreThreshold: float , frameInterval : int):
     os.system("rm -rf ./frames")
-    os.system("rm -rf ./input_video.mp4")
+    os.system("rm -rf ./custom_yolov8s.pt")
+
     print(scoreThreshold)
     print(frameInterval)
     inference_setting.update_settings(scoreThreshold, frameInterval)
@@ -29,7 +30,7 @@ async def get_inference_result_from_server(scoreThreshold: float , frameInterval
     print("starting yoloworld...")
     
     # yoloworld 모델 시작    
-    prevWorld.run_inference(inference_setting)
+    curWorld.run_inference(inference_setting)
     
     frames_directory = os.path.join("./", "frames")
     if not os.path.exists(frames_directory):

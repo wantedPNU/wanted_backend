@@ -205,3 +205,10 @@ yolo_world/*.pt
 yolo_world/output/
 yolo_world/input/
 keys/
+yolo_world/datasets/
+*.yaml
+*.pt
+runs/
+datasets/
+coco2017_dataset/
+.vscode/

@@ -1,0 +1,3 @@
+__ignore__
+person wearing red shirts
+person wearing white dress
