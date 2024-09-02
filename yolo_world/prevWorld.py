@@ -6,6 +6,7 @@ from inference.models.yolo_world.yolo_world import YOLOWorld
 import translators as ts
 
 
+
 class InferenceSettings:
     def __init__(self, score_threshold: float = 0.1, frame_interval: int = 3):
         self.score_threshold = score_threshold

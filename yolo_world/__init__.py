@@ -1,3 +1,6 @@
+
+from models.progress import ProgressValue
+progress_value = ProgressValue(0,10)
 # #divide the video.mp4 into frames at samples
 # #process the image frame and annotate and save at frames
 
