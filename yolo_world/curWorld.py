@@ -18,6 +18,7 @@ import supervision as sv
 from tqdm import tqdm
 from ultralytics import YOLO,YOLOWorld
 import translators as ts
+from models import ProgressValue
 
 class InferenceSettings:
     def __init__(self, score_threshold: float = 0.1, frame_interval: int = 3):
@@ -101,11 +102,7 @@ def extract_frames(video_path, frame_interval, file_name):
 
 def process_and_annotate_image(cnt,input_dir,model,classes,output_dir,inference_setting:InferenceSettings,file_name):
         
-    # model.set_classes(classes)
-    #threshold 설정해야함
-    print(inference_setting.score_threshold)
-    # model.save("custom_yolov8s.pt")
-    # model = YOLOWorld("custom_yolov8s.pt")
+    
     results = model.predict(input_dir,conf = inference_setting.score_threshold)
     
     
@@ -115,8 +112,10 @@ def process_and_annotate_image(cnt,input_dir,model,classes,output_dir,inference_
 
     detections = results[0].boxes
     
+    
+    
     # 감지된 객체가 있는 경우에만 저장
-    if len(detections) > 0:
+    if len(detections) > 0:        
         results[0].save(os.path.join(output_dir, f"{file_name[0:-4]}의 {cnt}번째 프레임 결과.jpg"))
     
     image = cv2.imread(input_dir)
@@ -165,14 +164,16 @@ def run_inference_on_video(video_path, model, inference_setting: InferenceSettin
     
     for i in range(count):
         process_and_annotate_image(i, os.path.join(input_dir, f"{file_name[0:-4]}의 {i}번째 프레임.jpg"), model, inference_setting.classes,output_dir, inference_setting, file_name)
-        print(i)
+        # print(i)
 
 def run_inference(inference_settings: InferenceSettings):
     inference_setting = InferenceSettings()
 
     model = initialize_model(inference_settings)
     
-    
+    # model.set_classes(inference_setting.classes)        
+    # model.save("custom_yolov8s.pt")
+    # model = YOLOWorld("custom_yolov8s.pt")
 
     inference_setting.update_settings(score_threshold = inference_settings.score_threshold, frame_interval = inference_settings.frame_interval)
     inference_setting.update_query(inference_settings.classes, True)
