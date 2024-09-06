@@ -15,8 +15,8 @@ url = "https://www.safetydata.go.kr"
 dataName = "/V2/api/DSSP-IF-00247"
 
 # 서비스 키
-serviceKey = api_key.serviceKey2
-#serviceKey = api_key.serviceKey1
+#serviceKey = api_key.serviceKey2
+serviceKey = api_key.serviceKey1
 
 # 요청에 사용할 파라미터들
 payloads = {

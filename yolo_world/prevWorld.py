@@ -129,17 +129,17 @@ def run_inference(inference_settings: InferenceSettings):
 
     inference_setting.update_settings(score_threshold = inference_settings.score_threshold, frame_interval = inference_settings.frame_interval)
     inference_setting.update_query(inference_settings.classes, True)
-    files_and_dirs = os.listdir("./samples/")
-    file_count = len([f for f in files_and_dirs if os.path.isfile(os.path.join("./samples/", f))])
+    files_and_dirs = os.listdir("./yolo_world/input_video/samples/")
+    file_count = len([f for f in files_and_dirs if os.path.isfile(os.path.join("./yolo_world/input_video/samples/", f))])
     print(file_count)
-    file_names = [f for f in files_and_dirs if os.path.isfile(os.path.join("./samples/", f))]
+    file_names = [f for f in files_and_dirs if os.path.isfile(os.path.join("./yolo_world/input_video/samples/", f))]
     print(file_names)
     for file_name in file_names:
         # 비디오에 대해 추론 실행
-        run_inference_on_video(os.path.join(os.getcwd(), f"./samples/{file_name}"), model, inference_setting, file_name)
+        run_inference_on_video(os.path.join(os.getcwd(), f"./yolo_world/input_video/samples/{file_name}"), model, inference_setting, file_name)
     
     # 비디오에 대해 추론 실행
-        # run_inference_on_video(os.path.join(os.getcwd(), "./input_video.mp4"), model, inference_setting)
+        # run_inference_on_video(os.path.join(os.getcwd(), "./yolo_world/input_video.mp4"), model, inference_setting)
 
 
 
@@ -157,7 +157,7 @@ model.set_classes(inference_settings.classes)
 
 # 비디오 경로 설정
 # 이 비디오 경로를 inpue_video.mp4로 하면 될듯?? 
-SOURCE_VIDEO_PATH = os.path.join(HOME, "./input_video.mp4")
+SOURCE_VIDEO_PATH = os.path.join(HOME, "./input_video.mp4") -> 경로 수정 필요
 # TARGET_VIDEO_PATH = os.path.join(HOME, "blue_result.mp4")
 
 # # 비디오 프레임 생성

@@ -16,6 +16,7 @@ class MongoManager:
 
     async def initiate_database(self):
         self.client = AsyncIOMotorClient(Settings().DATABASE_URL)
+        # self.client = MongoClient(Settings().DATABASE_URL)    
         self.db=self.client.get_default_database()
         await init_beanie(
             self.db, document_models=models.__all__

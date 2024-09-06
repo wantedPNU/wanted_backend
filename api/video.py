@@ -30,6 +30,7 @@ async def add_video_meta_to_db(video: Video = Body(...)):
 )
 async def add_video_file_to_db(location: str = Form(...), file: UploadFile = File()):   
     client = MongoClient('mongodb://localhost:27017/')    
+    # client = db_manager.client
     db = client['wanted']
     fs = gridfs.GridFS(db)
     
@@ -39,10 +40,11 @@ async def add_video_file_to_db(location: str = Form(...), file: UploadFile = Fil
     inference_setting.update_file_id(file_id)          
     file_id = ObjectId(inference_setting.file_id)
     
+    files_and_dirs = os.listdir("./yolo_world/input_video/samples/")
+    file_names = [f for f in files_and_dirs if os.path.isfile(os.path.join("./yolo_world/input_video/samples/", f))]
+    
     #todo : reject input if it is same video
-    output_path = f'./samples/{file_id}.mp4'
-    files_and_dirs = os.listdir("./samples/")
-    file_names = [f for f in files_and_dirs if os.path.isfile(os.path.join("./samples/", f))]
+    output_path = f'./yolo_world/input_video/samples/{file.filename}.mp4'
     
     with open(output_path, 'wb') as f:
         f.write(fs.get(file_id).read())
