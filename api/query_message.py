@@ -34,7 +34,7 @@ class Description(BaseModel):
 
 @router.get("/fetch-data", response_model=List[Description], tags=["Data Fetch"])
 async def fetch_data():
-    page_no = 650  # 페이지 번호를 함수 내부에 정의
+    page_no = 620  # 페이지 번호를 함수 내부에 정의
     descriptions_list: List[Description] = []
 
     async with aiohttp.ClientSession() as session:

@@ -1,4 +1,5 @@
 from fastapi import APIRouter,HTTPException
+from fastapi.responses import FileResponse
 from crud.crud import *
 import os
 from starlette.responses import StreamingResponse
@@ -6,6 +7,7 @@ from api import inference_setting
 from yolo_world import progress_value
 from yolo_world import prevWorld,curWorld
 from io import BytesIO
+from typing import List, Dict
 import zipfile
 import asyncio
 # from yolo_world.curWorld import progress_test
@@ -17,85 +19,6 @@ import threading
 IMAGE_DIRECTORY = "./frames/"
 
 router = APIRouter()
-
-async def generate_numbers():    
-    num = 0
-    print("generate numbers 시작")
-    while True:                
-        yield f"data: {num}\n\n"                
-        num += 1
-        print(num)
-        # print("----------------------------------------------------------------------------------------------------")
-        if num == 10:
-            break
-        await asyncio.sleep(1)  # 1초마다 숫자를 전송
-
-
-async def generate_numbers_str():    
-    str = "str"
-    num = 0
-    print("generate numbers str 시작")
-    while True:                
-        yield f"message: {str}\n\n"                
-        num += 0.5
-        print(str)
-        print(num)        
-        if num == 10:
-            break
-        await asyncio.sleep(0.5)  # 1초마다 숫자를 전송
-
-
-def generate_numbers_without_async():    
-    num = 0
-    print("generate numbers without async 시작")
-    while True:                
-        yield f"data: {num}\n\n"                
-        num += 1
-        print(num)        
-        if num == 10:
-            break
-        time.sleep(1)  # 1초마다 숫자를 전송
-
-async def generate_progress_value():
-    value = 0 
-    num = 0   
-    while True:
-        # value = progress_value.get_progress_value()        
-        # yield f"data: {value}\n\n"
-        yield f"data: {num}\n\n"
-        num += 1
-        if(value == 1):
-            break
-        await asyncio.sleep(1)
-        
-
-
-@router.get(
-        "/async/test"
-)
-async def async_test():  
-    # asyncio.create_task(generate_numbers_str())    
-    return StreamingResponse(generate_numbers_str(),media_type="text/event-stream")
-
-
-# @router.get(
-#     "/inference/progress"
-# )
-# async def sse_test():
-#     # print("start sse")  
-#     # thread_1 = threading.Thread(target = generate_numbers)   
-#     # thread_1.start()         
-#     return StreamingResponse(generate_numbers(), media_type="text/event-stream")
-
-
-@router.get(
-    "/inference/progress"
-)
-async def sse_test():
-    # print("start sse")  
-    # thread_1 = threading.Thread(target = generate_numbers)   
-    # thread_1.start()         
-    return StreamingResponse(generate_progress_value(), media_type="text/event-stream")
 
 @router.get(
     "/inference",
@@ -114,7 +37,6 @@ async def get_inference_result_from_server(scoreThreshold: float , frameInterval
     await curWorld.run_inference(inference_setting)
     
     # asyncio.sleep(3)
-
 
     frames_directory = os.path.join("./", "frames")
     if not os.path.exists(frames_directory):
@@ -135,6 +57,30 @@ async def get_inference_result_from_server(scoreThreshold: float , frameInterval
 
     return StreamingResponse(iter_file(), media_type="application/zip")    
 
+@router.get("/images/{filename}")
+async def get_image(filename: str):
+    file_path = os.path.join("./frames", filename)
+    if not os.path.isfile(file_path):
+        raise HTTPException(status_code=404, detail="Image not found")
+    return FileResponse(file_path)
+
+@router.get("/high-probability-images", response_model=List[Dict[str, str]])
+async def get_high_probability_images():
+    frames_directory = "./frames"
+    if not os.path.exists(frames_directory):
+        raise HTTPException(status_code=404, detail="Frames directory not found")
+
+    image_filenames = [f for f in os.listdir(frames_directory) if f.endswith('결과.jpg')]
+    if not image_filenames:
+        raise HTTPException(status_code=404, detail="No images found in frames directory")
+
+    # 이미지 파일 이름과 URL을 포함하는 객체 리스트 생성
+    image_info = [
+        {"filename": filename, "url": f"/images/{filename}"}
+        for filename in image_filenames
+    ]
+
+    return image_info
 
 
 # @router.get(

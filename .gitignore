@@ -213,3 +213,4 @@ datasets/
 coco2017_dataset/
 .vscode/
 labelme2coco/
+yolo_world/backup

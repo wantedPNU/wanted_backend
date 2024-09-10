@@ -36,4 +36,10 @@ async def home():
 
 @app.on_event("startup")
 async def on_app_start():
-	await db_manager.initiate_database()
+    print("database initiation (async)")
+    await db_manager.initiate_database()
+
+# @app.on_event("startup")
+# def on_app_start():
+#     print("database initiation (sync)")
+#     db_manager.initiate_db_sync()

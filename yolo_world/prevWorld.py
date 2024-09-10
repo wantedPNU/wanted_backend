@@ -108,8 +108,8 @@ def run_inference_on_video(video_path, model, inference_setting: InferenceSettin
     count = extract_frames(video_path, inference_setting.frame_interval, file_name)
 
     # 주석 추가 도구 설정
-    BOUNDING_BOX_ANNOTATOR = sv.BoundingBoxAnnotator(thickness=1)
-    LABEL_ANNOTATOR = sv.LabelAnnotator(text_thickness=2, text_scale=0.5, text_color=sv.Color.BLACK)
+    # BOUNDING_BOX_ANNOTATOR = sv.BoundingBoxAnnotator(thickness=1)
+    # LABEL_ANNOTATOR = sv.LabelAnnotator(text_thickness=2, text_scale=0.5, text_color=sv.Color.BLACK)
 
     output_dir = os.path.join(os.getcwd(), "frames")
     for i in range(count):

@@ -20,7 +20,7 @@ from tqdm import tqdm
 from ultralytics import YOLO,YOLOWorld
 import translators as ts
 from yolo_world import progress_value
-from api.inference import generate_numbers
+
 class InferenceSettings:
     def __init__(self, score_threshold: float = 0.1, frame_interval: int = 3):
         self.score_threshold = score_threshold
@@ -54,8 +54,12 @@ def initialize_model(inference_setting:InferenceSettings):
     
     # model = YOLOWorld('yolov8x-worldv2.pt')        
     # model = YOLOWorld('model_for_white_shirt.pt')
-    model = YOLOWorld('./yolo_world/model_jmk_2.pt')
+    # model = YOLOWorld('yolo_world/third_train_3.pt')
+    # model = YOLOWorld('yolo_world/model_jmk_2.pt')
+    model = YOLOWorld('yolo_world/third_train_3_from_model_jmk_and_pic2.pt')
+    
     model.set_classes(inference_setting.classes)
+    
     
     # result = model.predict()
     # first = result[0].boxes
@@ -143,10 +147,19 @@ async def process_and_annotate_image(cnt,input_dir,model,classes,output_dir,infe
 
     detections = results[0].boxes
     
-    print(progress_value.get_progress_mom())
+    print("진행율 : " , progress_value.get_progress_value())
+
+    
+    
     
     # 감지된 객체가 있는 경우에만 저장
-    if len(detections) > 0:        
+    if len(detections) > 0:      
+        print("라벨 id: " , detections.cls)  
+        print("라벨 conf : " , detections.conf)
+        # @todo 
+        # case (입력 쿼리가 detections에서 모두 일치한다(있다). -> 저장)
+        # case (입력 쿼리가 detection에서 하나만 일치한다(있다) -> 저장)
+        # case (입력 쿼리가 detection에서 일치 하지 않는다. -> 저장 x or zip 파일로는 제공)
         results[0].save(os.path.join(output_dir, f"{file_name[0:-4]}의 {cnt}번째 프레임 결과.jpg"))
     
     image = cv2.imread(input_dir)
@@ -190,7 +203,7 @@ async def run_inference(inference_settings: InferenceSettings):
 
     print("setted intiial model")
     
-    print("generate numbers")
+    
     # generate_numbers()
 
     total_frame_count = 0
