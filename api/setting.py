@@ -1,6 +1,5 @@
 from fastapi import APIRouter, HTTPException, status
 from pydantic import BaseModel
-from yolo_world import prevWorld
 from yolo_world import curWorld
 
 class SearchSettings(BaseModel):

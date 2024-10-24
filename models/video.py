@@ -1,7 +1,15 @@
 from typing import Optional
 from beanie import Document
+from pydantic import BaseModel
 
-
+class VideoLocation(BaseModel):
+    location : str
+    class Config:
+        json_schema_extra = {
+            "example":{
+                "location" : "부산광역시 부산대학로 64번길 76"
+            }
+        }
 class Video(Document):
     name : str
     length : int

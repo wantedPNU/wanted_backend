@@ -214,3 +214,8 @@ coco2017_dataset/
 .vscode/
 labelme2coco/
 yolo_world/backup
+yolo_world/yam_files
+yolo_world/model_hist
+yolo_world/model_eval_data
+yolo_world/input_video
+yolo_world/datasets_hist

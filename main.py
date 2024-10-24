@@ -29,7 +29,9 @@ app.add_middleware(
 class Item(BaseModel):
     name: str
     
-
+@app.get("/v0/version")
+async def version():
+    return {"version": app.version}
 @app.get("/")
 async def home():
     return {"message" : "welcome to wanted_backend"}
