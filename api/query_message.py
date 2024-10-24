@@ -16,7 +16,7 @@ dataName = "/V2/api/DSSP-IF-00247"
 
 # 서비스 키
 #serviceKey = api_key.serviceKey2
-serviceKey = api_key.serviceKey1
+serviceKey = api_key.serviceKey2
 
 # 요청에 사용할 파라미터들
 payloads = {
@@ -34,7 +34,7 @@ class Description(BaseModel):
 
 @router.get("/fetch-data", response_model=List[Description], tags=["Data Fetch"])
 async def fetch_data():
-    page_no = 650  # 페이지 번호를 함수 내부에 정의
+    page_no = 670  # 페이지 번호를 함수 내부에 정의
     descriptions_list: List[Description] = []
 
     async with aiohttp.ClientSession() as session:
