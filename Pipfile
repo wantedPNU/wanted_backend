@@ -1,0 +1,22 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+fastapi = "*"
+uvicorn = "*"
+odmantic = "*"
+pymongo = "*"
+beanie = "*"
+pydantic_settings="*"
+translators = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.10"
+python_full_version = "3.10.9"
+
+[scripts]
+start = "uvicorn main:app --port 5000 --reload"
